@@ -24,7 +24,7 @@
 				<th>CreateDate</th>
 			</tr>
 
-			<c:forEach items="${students}" var="student" varStatus="status">
+			<c:forEach items="${studentList}" var="student" varStatus="status">
 
 				<!-- create an "update" link with Student id -->
 				<c:url var="updateLink" value="/students/update">
@@ -37,7 +37,7 @@
 				</c:url>
 
 				<tr
-					style="background-color:${status.index % 2==0? 'white':'yellow'}">
+					style="background-color:${status.index % 2==0? 'lightgray':'#9484d5'}">>
 					<td>${student.id}</td>
 					<td>${student.firstName}</td>
 					<td>${student.lastName}</td>
