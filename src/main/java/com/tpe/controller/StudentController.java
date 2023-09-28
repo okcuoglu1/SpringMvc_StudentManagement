@@ -1,13 +1,11 @@
 package com.tpe.controller;
 
 import com.tpe.domain.Student;
+import com.tpe.exceptions.ResourceNotFound;
 import com.tpe.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -59,8 +57,6 @@ public class StudentController {
         service.saveStudent(student);
         listAllStudent();
 
-
-
         return "redirect:/students" ; //request den requeste tekrar yönlendirmiş olduk. /students url'e yönlendir.
     }
 
@@ -79,7 +75,33 @@ public class StudentController {
     }
 
 
+    //3-update:http://localhost:8080/SpringMVC/students/update?id=4
+    @GetMapping("/update")
+    public ModelAndView showFormForUpdate(@RequestParam("id") Long id){
+        Student foundStudent=service.getStudentById(id);
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("student",foundStudent);
+        mav.setViewName("studentForm");
+        return mav;
+    }
 
+    //4-delete:http://localhost:8080/SpringMVC/students/delete/1
+    @GetMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable("id") Long id){
+        service.deleteStudent(id);
+        return "redirect:/students";
+    }
+
+    //5-Exception Handling
+    @ExceptionHandler(ResourceNotFound.class)
+    public ModelAndView handleResourceNotFoundException(Exception ex){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("message",ex.getMessage());
+        mav.setViewName("notFound");
+        return mav;
+    }
+    //ExceptionHandler: belirtilen exception sınıfı için bir metod belirlememizi sağlar
+    //bu metod exceptionı yakalar ve özel bir işlem(notFound.jsp gösterilmesi) uygular...
 
 
 }
